@@ -1,10 +1,10 @@
 # Econova Labs — Project VERDANT
 
-A responsive, standalone website based on the supplied Project VERDANT final report. No build, installation, server, API keys or login required. Keep this folder inside the existing repository to preserve the portfolio at its root.
+A responsive, standalone website based on the supplied Project VERDANT final report. No build, installation, server, API keys or login required. The website files live at the root of this new repository.
 
 ## Public address
 
-Expected GitHub Pages address (must be verified after deployment):
+Public GitHub Pages address (verified with HTTP 200 after deployment):
 
 https://vishnutef.github.io/econovalabs/
 
@@ -18,7 +18,7 @@ This standalone repository is https://github.com/Vishnutef/econovalabs. If a cus
 
 The feedback button opens the form in a new tab. Until configured, the page explains that the form is coming soon and collects no responses. The form should permit your intended visitors to respond and explain its data use. Never put passwords or access tokens in this repository.
 
-The QR code points to the website itself, so adding the form later does not require changing the QR code. `website-qr.svg` is a scalable download for exhibition posters and printing.
+The QR code points to the website itself, so adding the form later does not require changing the QR code. `website-qr.svg` is a scalable download for exhibition posters and printing. `website-qr.png` is an image you can share directly.
 
 ## Publish with GitHub Pages
 
