@@ -6,9 +6,9 @@ A responsive, standalone website based on the supplied Project VERDANT final rep
 
 Public GitHub Pages address (verified with HTTP 200 after deployment):
 
-https://vishnutef.github.io/econovalabs/
+https://econovalabs.github.io/econovalabs/
 
-This standalone repository is https://github.com/Vishnutef/econovalabs. If a custom domain or a different Pages source is configured, use the URL reported by GitHub Pages and regenerate the QR code before printing.
+This standalone repository is https://github.com/econovalabs/econovalabs. If a custom domain or a different Pages source is configured, use the URL reported by GitHub Pages and regenerate the QR code before printing.
 
 ## Add the feedback form later
 

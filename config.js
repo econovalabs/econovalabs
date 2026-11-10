@@ -2,5 +2,5 @@
 // Example: https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform
 window.ECONOVA_CONFIG = {
   feedbackUrl: "",
-  websiteUrl: "https://vishnutef.github.io/econovalabs/"
+  websiteUrl: "https://econovalabs.github.io/econovalabs/"
 };
