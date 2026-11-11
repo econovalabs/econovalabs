@@ -12,17 +12,23 @@ This standalone repository is https://github.com/econovalabs/econovalabs. If a c
 
 ## Direct feedback and private dashboard
 
-Visitors submit their name, email, 1–5 star rating and suggestions/details directly on the website. All fields and consent are required. Successful submissions receive a reference number. If saving fails, entries stay on screen.
+Visitors submit name, email, a 1–5 star rating and suggestions/details directly on the website. All fields and consent are required. Submissions receive a reference number. Failed submissions keep the entered details, and retry IDs prevent duplicate writes.
 
-The database backend is hosted separately from GitHub Pages, which cannot execute server code. Its public base URL is configured in config.js. No passwords, tokens or database credentials are stored in this repository. Responses are stored in a hosted Cloudflare D1 database, not in GitHub commits or browser storage.
+Dashboard: https://econovalabs.github.io/econovalabs/admin/
 
-Dashboard: https://econova-verdant-smartgrow.rainy-lark-5600.chatgpt.site/admin
+Sign in directly with the Supabase user ccodesdev@gmail.com and the password you chose privately in Supabase. No ChatGPT sign-in or ChatGPT-hosted backend is used by the current website.
 
-Use Sign in with ChatGPT and the account associated with sherin122491@gmail.com. Other accounts and anonymous visitors cannot read feedback or export it. The dashboard shows names, emails, comments, average rating, rating distribution, search, rating filters, pagination and CSV export (up to the latest 10,000 matching responses). Visitor-supplied names and emails are not verified.
+The dashboard includes names, email addresses, comments, average rating, rating distribution, search, rating filters, pagination and CSV export of up to 10,000 matching entries. Visitor names and email addresses are self-reported, not verified. Sign-out clears the private inbox and ends the browser-tab session.
 
-A source mirror and database migrations are in feedback-backend/. That code is deployed separately through the existing Sites hosting project, not automatically by GitHub Pages. Sites supplies trusted sign-in identity headers; do not deploy the Worker elsewhere without an equivalent verified authentication boundary. Never add submitted personal data to this public repository.
+Supabase stores feedback and manages sign-in. Its URL and publishable key in config.js are public application settings. Never put a secret/service-role key or password in this repository. Database row-level security pins the administrator by immutable user ID. Anonymous clients can submit through the validated RPC but cannot read responses or insert directly into the table. Other signed-in users cannot read or export feedback.
 
-The QR still opens the website. website-qr.svg is scalable for printing, and website-qr.png can be shared directly.
+The Supabase setup is in supabase/setup.sql. Create and confirm the administrator in Authentication > Users before running it. Rerunning setup preserves feedback and updates administrator membership to the configured user. Public user registration is not provided by this website.
+
+The bundled official Supabase client is committed, so the site requires no build to serve. To rebuild it, run npm install and npm run build from the supabase folder. Its MIT license is in supabase-client.LICENSE.
+
+The feedback-backend folder contains retired source from the previous hosting system. It is not loaded or used by the current website. The previous live backend and any historical responses have been retained separately; historical responses are not automatically copied into the new Supabase database.
+
+The QR code still points to the public website. website-qr.svg is scalable for printing, and website-qr.png is easy to share.
 
 ## Publish with GitHub Pages
 

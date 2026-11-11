@@ -1,3 +1,7 @@
+# Retired backend source
+
+This source is archived for reference only. The current website uses Supabase and the independent admin/ dashboard. Nothing in this folder is loaded by the active website. Any historical records in the previous deployed backend remain preserved separately.
+
 # Econova Labs feedback backend
 
 This is a source mirror of the backend deployed through the existing Sites project in .openai/hosting.json. GitHub Pages does not execute this code.
