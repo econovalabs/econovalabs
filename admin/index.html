@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Econova Labs | Feedback dashboard</title><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://tzoplnacpytnmpemlmbi.supabase.co; img-src 'self' data:; base-uri 'self'; form-action 'self'"><link rel="stylesheet" href="dashboard.css"><script src="../config.js" defer></script><script src="../supabase-client.js" defer></script><script src="dashboard.js" defer></script></head>
+<body><header><a class="brand" href="https://econovalabs.github.io/econovalabs/">econova<span>labs</span></a><div class="account"><span id="signed-in-email"></span><button id="sign-out" class="quiet" type="button" hidden>Sign out ↗</button></div></header>
+<section id="login-view" class="login-container"><div class="login-card">
+<p class="eyebrow">ECONOVA LABS / PRIVATE DASHBOARD</p>
+<h1>Your feedback.<br>Your growing world.</h1>
+<p>Sign in to view visitor ratings, comments and contact details.</p>
+<form id="login-form" method="post"><label for="login-email">Email address<input id="login-email" type="email" name="email" autocomplete="username" maxlength="254" required></label>
+<label for="login-password">Password<input id="login-password" type="password" name="password" autocomplete="current-password" maxlength="200" required></label>
+<label class="show-password"><input id="show-password" type="checkbox"> Show password</label>
+<button class="button" id="login-submit" type="submit">Sign in to dashboard ↗</button></form>
+<p id="login-status" class="status" role="status" aria-live="polite">Only the authorized dashboard account can access responses.</p>
+<a class="back-link" href="../">← Back to the website</a></div></section><main id="dashboard-view" class="dashboard" hidden><div class="heading"><div><p class="eyebrow">PROJECT VERDANT / PRIVATE DASHBOARD</p><h1>Listen. Learn. <em>Grow.</em></h1><p>Visitor ratings, suggestions and contact details, in one place.</p></div><button class="button" id="refresh">Refresh responses ↻</button></div>
+<section class="stats" aria-label="Feedback summary"><article><span>Responses matching filters</span><strong id="total">—</strong><small>Real submissions only</small></article><article><span>Average rating</span><strong id="average">—</strong><small>Out of 5 stars</small></article><article class="distribution"><span>Rating distribution</span><div id="distribution"><small>No ratings loaded yet.</small></div></article></section>
+<section class="responses" aria-labelledby="responses-title"><div class="list-heading"><div><p class="eyebrow">YOUR RESEARCH, AS IT COMES IN</p><h2 id="responses-title">Feedback inbox</h2></div><button class="export-link" id="export" type="button">Download CSV ↓</button></div>
+<form id="filters" class="filters"><label>Search responses<input id="search" type="search" maxlength="100" placeholder="Name, email or comment"></label><label>Rating<select id="rating"><option value="">All ratings</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label><button class="button" type="submit">Apply filters</button><button class="quiet" id="clear" type="button">Clear</button></form>
+<p id="status" class="status" role="status" aria-live="polite">Loading feedback…</p><div id="items" class="items" aria-busy="true"></div>
+<div class="pagination"><button class="quiet" id="previous" disabled>← Previous</button><span id="page-info">Page 1</span><button class="quiet" id="next" disabled>Next →</button></div></section>
+<p class="privacy-note">Private research records. Export only when needed and keep downloaded files secure. CSV exports include up to the latest 10,000 matching responses. Names and email addresses are provided by visitors and have not been verified.</p></main>
+</body></html>

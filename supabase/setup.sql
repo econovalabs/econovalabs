@@ -1,6 +1,6 @@
 -- Run once in the Supabase project's SQL Editor.
 -- First create the dashboard user in Authentication > Users:
--- sherin122491@gmail.com (set its password privately; confirm the user).
+-- ccodesdev@gmail.com (set its password privately; confirm the user).
 -- No passwords, secret keys or visitor records belong in this file.
 begin;
 
@@ -17,11 +17,12 @@ do $$
 declare admin_id uuid;
 begin
   select id into admin_id from auth.users
-  where lower(email) = 'sherin122491@gmail.com'
+  where lower(email) = 'ccodesdev@gmail.com'
     and email_confirmed_at is not null;
   if admin_id is null then
-    raise exception 'Create and confirm sherin122491@gmail.com in Authentication > Users first, then run this setup again.';
+    raise exception 'Create and confirm ccodesdev@gmail.com in Authentication > Users first, then run this setup again.';
   end if;
+  delete from econova_private.dashboard_admins where user_id <> admin_id;
   insert into econova_private.dashboard_admins(user_id)
   values(admin_id) on conflict do nothing;
 end $$;

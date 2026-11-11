@@ -1,5 +1,6 @@
-// Feedback is saved by the hosted database service; no secrets belong here.
+// Public Supabase application settings. Never add a secret/service-role key.
 window.ECONOVA_CONFIG = {
-  feedbackApiBase: "https://econova-verdant-smartgrow.rainy-lark-5600.chatgpt.site",
+  supabaseUrl: "https://tzoplnacpytnmpemlmbi.supabase.co",
+  supabasePublishableKey: "sb_publishable_ZDhYaPhuwsj9_UNlF-AzEw_Y3vCbb1n",
   websiteUrl: "https://econovalabs.github.io/econovalabs/"
 };
