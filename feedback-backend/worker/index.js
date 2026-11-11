@@ -115,9 +115,9 @@ async function adminData(request, env, exportCsv) {
 }
 function signInPage(signedIn) {
   const title = signedIn ? 'This account does not have access.' : 'Your feedback, in one private place.';
-  const text = signedIn ? 'Please sign out and use the ChatGPT account associated with sherin122491@gmail.com.' : 'Sign in with the ChatGPT account associated with sherin122491@gmail.com to view visitor feedback.';
+  const text = signedIn ? 'Please sign out and use the authorized account associated with sherin122491@gmail.com.' : 'Sign in with the authorized account associated with sherin122491@gmail.com to view visitor feedback.';
   const link = signedIn ? '/signout-with-chatgpt?return_to=%2Fadmin' : '/signin-with-chatgpt?return_to=%2Fadmin';
-  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Econova Labs | Dashboard sign-in</title><link rel="stylesheet" href="/dashboard.css"></head><body class="login-body"><main class="login-card"><a class="brand" href="' + WEBSITE + '">econova<span>labs</span></a><p class="eyebrow">PRIVATE FEEDBACK DASHBOARD</p><h1>' + title + '</h1><p>' + text + '</p><a class="button" target="_top" href="' + link + '">' + (signedIn ? 'Sign out and switch account' : 'Sign in with ChatGPT') + ' ↗</a><a class="back-link" href="' + WEBSITE + '">← Back to the website</a></main></body></html>';
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Econova Labs | Dashboard sign-in</title><link rel="stylesheet" href="/dashboard.css"></head><body class="login-body"><main class="login-card"><a class="brand" href="' + WEBSITE + '">econova<span>labs</span></a><p class="eyebrow">PRIVATE FEEDBACK DASHBOARD</p><h1>' + title + '</h1><p>' + text + '</p><a class="button" target="_top" href="' + link + '">' + (signedIn ? 'Sign out and switch account' : 'Sign in to dashboard') + ' ↗</a><a class="back-link" href="' + WEBSITE + '">← Back to the website</a></main></body></html>';
 }
 export default {
   async fetch(request, env) {
