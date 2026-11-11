@@ -1,0 +1,11 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+const root = new URL('./', import.meta.url);
+const files = ['dashboard.html', 'dashboard.css', 'dashboard.js'];
+const values = await Promise.all(files.map(file => readFile(new URL('pages/' + file, root), 'utf8')));
+const names = ['DASHBOARD_HTML', 'DASHBOARD_CSS', 'DASHBOARD_JS'];
+const source = names.map((name, i) => `const ${name} = ${JSON.stringify(values[i])};`).join('\n') + '\n' + await readFile(new URL('worker/index.js', root), 'utf8');
+await mkdir(new URL('dist/server/', root), {recursive:true});
+await mkdir(new URL('dist/.openai/', root), {recursive:true});
+await writeFile(new URL('dist/server/index.js', root), source);
+await writeFile(new URL('dist/.openai/hosting.json', root), await readFile(new URL('.openai/hosting.json', root)));
+console.log('Built dependency-free feedback Worker and dashboard assets.');

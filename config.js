@@ -1,6 +1,5 @@
-// Paste your Google Form's shareable HTTPS link here when it is ready.
-// Example: https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform
+// Feedback is saved by the hosted database service; no secrets belong here.
 window.ECONOVA_CONFIG = {
-  feedbackUrl: "",
+  feedbackApiBase: "https://econova-verdant-smartgrow.rainy-lark-5600.chatgpt.site",
   websiteUrl: "https://econovalabs.github.io/econovalabs/"
 };

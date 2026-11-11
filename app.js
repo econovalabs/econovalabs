@@ -61,14 +61,4 @@ document.getElementById('reset-demo').addEventListener('click', () => {
   brightness.value = '70'; lightSwitch.setAttribute('aria-checked', 'true'); airSwitch.setAttribute('aria-checked', 'true');
   document.querySelector('[data-mode="Automatic"]').click();
 });
-const feedbackButton = document.getElementById('feedback-button');
-const configuredFeedbackUrl = window.ECONOVA_CONFIG?.feedbackUrl?.trim();
-let validFormUrl = false;
-try { const url = new URL(configuredFeedbackUrl); validFormUrl = url.protocol === 'https:' && (url.hostname === 'forms.gle' || (url.hostname === 'docs.google.com' && url.pathname.startsWith('/forms/'))); } catch { /* The form can be configured later. */ }
-if (validFormUrl) {
-  feedbackButton.href = configuredFeedbackUrl; feedbackButton.target = '_blank'; feedbackButton.rel = 'noopener noreferrer'; feedbackButton.removeAttribute('aria-disabled');
-  document.getElementById('feedback-status').textContent = 'Opens our Google Form in a new tab. Please review its privacy information before submitting.';
-} else {
-  feedbackButton.addEventListener('click', event => { event.preventDefault(); document.getElementById('feedback-status').textContent = 'The Google Form is not connected yet. Please come back soon to share your thoughts.'; });
-}
 document.getElementById('year').textContent = new Date().getFullYear();

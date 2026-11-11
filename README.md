@@ -10,15 +10,19 @@ https://econovalabs.github.io/econovalabs/
 
 This standalone repository is https://github.com/econovalabs/econovalabs. If a custom domain or a different Pages source is configured, use the URL reported by GitHub Pages and regenerate the QR code before printing.
 
-## Add the feedback form later
+## Direct feedback and private dashboard
 
-1. Open `config.js`.
-2. Paste your shareable Google Form link into `feedbackUrl`, keeping the quotes.
-3. Commit and publish the change.
+Visitors submit their name, email, 1–5 star rating and suggestions/details directly on the website. All fields and consent are required. Successful submissions receive a reference number. If saving fails, entries stay on screen.
 
-The feedback button opens the form in a new tab. Until configured, the page explains that the form is coming soon and collects no responses. The form should permit your intended visitors to respond and explain its data use. Never put passwords or access tokens in this repository.
+The database backend is hosted separately from GitHub Pages, which cannot execute server code. Its public base URL is configured in config.js. No passwords, tokens or database credentials are stored in this repository. Responses are stored in a hosted Cloudflare D1 database, not in GitHub commits or browser storage.
 
-The QR code points to the website itself, so adding the form later does not require changing the QR code. `website-qr.svg` is a scalable download for exhibition posters and printing. `website-qr.png` is an image you can share directly.
+Dashboard: https://econova-verdant-smartgrow.rainy-lark-5600.chatgpt.site/admin
+
+Use Sign in with ChatGPT and the account associated with sherin122491@gmail.com. Other accounts and anonymous visitors cannot read feedback or export it. The dashboard shows names, emails, comments, average rating, rating distribution, search, rating filters, pagination and CSV export (up to the latest 10,000 matching responses). Visitor-supplied names and emails are not verified.
+
+A source mirror and database migrations are in feedback-backend/. That code is deployed separately through the existing Sites hosting project, not automatically by GitHub Pages. Sites supplies trusted sign-in identity headers; do not deploy the Worker elsewhere without an equivalent verified authentication boundary. Never add submitted personal data to this public repository.
+
+The QR still opens the website. website-qr.svg is scalable for printing, and website-qr.png can be shared directly.
 
 ## Publish with GitHub Pages
 
