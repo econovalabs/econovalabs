@@ -26,6 +26,10 @@ After signing in, choose **VERDANT working demo**. Only an account that passes t
 
 The phone-friendly demo includes LED colour and brightness, a custom colour picker, light and fan switches, animated watering, reservoir refill and low-water protection, adjustable illustrative sensor values, manual and automatic modes, day/night scenarios, modular layout, enclosure finishes and a guided walkthrough. Controls do not operate real equipment or save product settings. Thresholds and readings are illustrative, not plant-care advice or verified product specifications. Reduced-motion preferences are respected.
 
+The temperature slider immediately updates the numeric reading, greenhouse screen and warm/cool thermometer. Irrigation includes flowing pipe highlights, falling water and ripples; ventilation includes moving air streaks.
+
+The admin demo also supports a captioned, 30-second MP4 walkthrough. Run supabase/admin-video.sql once, then open the supplied MP4 using **Open MP4 from this device** and choose **Save video privately**. It is stored in the private econova-admin-media bucket as verdant-walkthrough.mp4, outside this public repository. **Watch private video** creates a short-lived playback URL after checking administrator permission. The film is a silent concept animation, not footage of physical hardware.
+
 Supabase stores feedback and manages sign-in. Its URL and publishable key in config.js are public application settings. Never put a secret/service-role key or password in this repository. Database row-level security pins the administrator by immutable user ID. Anonymous clients can submit through the validated RPC but cannot read responses or insert directly into the table. Other signed-in users cannot read or export feedback.
 
 The Supabase setup is in supabase/setup.sql. Create and confirm the administrator in Authentication > Users before running it. Rerunning setup preserves feedback and updates administrator membership to the configured user. Public user registration is not provided by this website.

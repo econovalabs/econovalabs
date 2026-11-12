@@ -53,7 +53,7 @@
 <path d="m278 250 250 48" data-led="true" stroke="#f2ffd0" stroke-width="13" filter="url(#glow)" opacity=".7"/>
 <path d="m278 250 250 48" stroke="#59744d" stroke-width="8" stroke-linecap="round"/>
 <path d="m278 252 250 48" data-led="true" stroke="#efffc7" stroke-width="3" stroke-linecap="round"/>
-<path id="pd-light-beam" d="m144 327 126-67 278 52-115 201-282-57Z" fill="#c9a2ff" opacity=".18"/><g id="pd-droplets"><circle class="pd-drop" cx="230" cy="318" r="3"/><circle class="pd-drop" cx="348" cy="342" r="3"/><circle class="pd-drop" cx="446" cy="362" r="3"/></g><!-- front and side glass -->
+<path id="pd-light-beam" d="m144 327 126-67 278 52-115 201-282-57Z" fill="#c9a2ff" opacity=".18"/><g id="pd-droplets"><circle class="pd-drop" cx="230" cy="318" r="3"/><circle class="pd-drop" cx="348" cy="342" r="3"/><circle class="pd-drop" cx="446" cy="362" r="3"/></g><g class="pd-water-effects" fill="none" stroke-linecap="round"><path class="pd-pipe-back" d="M157 490 166 426 174 307 198 294 505 353 505 420" stroke="#568898" stroke-width="6"/><path id="pd-flow-pipe" class="pd-flow" d="M157 490 166 426 174 307 198 294 505 353 505 420" stroke="#b5efff" stroke-width="3" stroke-dasharray="7 10"/><path class="pd-flow" d="M232 301 230 349M350 325 348 371M448 344 446 390" stroke="#93deff" stroke-width="3" stroke-dasharray="4 7"/><ellipse class="pd-water-ripple" cx="230" cy="420" rx="13" ry="4" stroke="#74c8de" stroke-width="2"/><ellipse class="pd-water-ripple pd-ripple-late" cx="350" cy="444" rx="13" ry="4" stroke="#74c8de" stroke-width="2"/></g><g class="pd-air-effects" fill="none" stroke="#d9f6ee" stroke-width="3" stroke-linecap="round"><path class="pd-air-line" d="M475 382C438 363 420 412 379 389S321 370 291 393"/><path class="pd-air-line" d="M480 397C434 379 413 430 369 409S310 390 278 413"/><path class="pd-air-line" d="M480 369C449 346 425 391 396 372S339 349 312 369"/></g><g id="pd-temperature-indicator" transform="translate(148 358)"><rect x="-6" y="-22" width="12" height="41" rx="6" fill="#eef8de" stroke="#75947a"/><rect id="pd-temperature-fill" x="-3" y="-7" width="6" height="23" rx="3" fill="#8bb661"/><circle id="pd-temperature-bulb" cy="21" r="9" fill="#8bb661" stroke="#eff8e4" stroke-width="3"/></g><!-- front and side glass -->
 <path d="m126 319 306 56v150l-306-60Z" fill="url(#glass)" stroke="#809f7c" stroke-width="2"/>
 <path d="m432 375 139-67v140l-139 77Z" fill="url(#sideGlass)" stroke="#6b8c6d" stroke-width="2"/>
 <!-- reflection streaks -->
@@ -71,7 +71,7 @@
 <path d="m151 481 26 5v14l-26-5Z" fill="#102e25"/><path d="m155 488 18 4v4l-18-4Z" id="pd-tank-level" fill="#85ad9c"/>
 <!-- digital display -->
 <path d="m298 512 89 18v29l-89-19Z" fill="#0d2921" stroke="#527056" stroke-width="1"/>
-<text x="307" y="534" font-family="Arial,sans-serif" font-size="11" fill="#b5d39b" transform="rotate(12 307 534)">24°  65%  ◉</text>
+<text id="pd-product-display" x="307" y="534" font-family="Arial,sans-serif" font-size="11" fill="#b5d39b" transform="rotate(12 307 534)">24°  65%  ◉</text>
 <path d="m398 534 12 3v12l-12-3Z" fill="#3d5b41"/><circle cx="404" cy="542" r="2" fill="#bbd891"/>
 <text x="195" y="518" font-family="Arial,sans-serif" font-size="7" letter-spacing="2" fill="#d6dfc3" transform="rotate(12 195 518)">VERDANT</text>
 <!-- side vents -->

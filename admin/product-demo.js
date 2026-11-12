@@ -1,4 +1,5 @@
 // A visual simulation only. This module never connects to real hardware.
+import {mountPrivateVideo} from './product-video.js';
 const initialState=()=>({mode:'manual',light:true,color:'#c9a2ff',brightness:75,fan:false,moisture:45,temperature:24,humidity:65,reservoir:80,layout:'full',finish:'#416a4c',day:true,watering:false});
 export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
   const permission=await db.rpc('econova_admin_status');
@@ -23,6 +24,8 @@ export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
   const art=new DOMParser().parseFromString(artText,'image/svg+xml');
   if(art.querySelector('parsererror')){root.replaceChildren();throw Error('The greenhouse illustration is invalid.');}
   root.querySelector('#pd-art').append(document.importNode(art.documentElement,true));
+  const filmRoot=document.createElement('section');filmRoot.className='pd-film';root.append(filmRoot);
+  const film=mountPrivateVideo(filmRoot,{db,isAuthorized,onDenied});
   const find=id=>root.querySelector('#'+id);
   let state=initialState(),destroyed=false,visible=true,pumpTimer=null,tourTimer=null,tourIndex=0;
   const guard=()=>!destroyed&&isAuthorized();
@@ -42,6 +45,13 @@ export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
     const values={temperature:state.temperature+'°C',humidity:state.humidity+'%',moisture:state.moisture+'%',brightness:state.brightness+'%'};
     for(const [key,value] of Object.entries(values)){find('pd-'+key+'-value').textContent=value;find('pd-'+key).value=state[key];}
     find('pd-temp-reading').textContent=values.temperature;find('pd-humidity-reading').textContent=values.humidity;find('pd-moisture-reading').textContent=values.moisture;
+    find('pd-product-display').textContent=state.temperature+'° '+state.humidity+'% '+state.moisture+'%';
+    const temperatureColour=state.temperature>28?'#ec9568':state.temperature<20?'#73b9e3':'#8bb661';
+    const temperatureHeight=8+(state.temperature-15)/23*26;
+    find('pd-temperature-fill').setAttribute('height',String(temperatureHeight));
+    find('pd-temperature-fill').setAttribute('y',String(17-temperatureHeight));
+    find('pd-temperature-fill').setAttribute('fill',temperatureColour);find('pd-temperature-bulb').setAttribute('fill',temperatureColour);
+    find('pd-temp-reading').style.color=state.temperature>28?'#a94622':state.temperature<20?'#267294':'#3d6d35';
     find('pd-reservoir').value=state.reservoir;find('pd-reservoir-value').textContent=state.reservoir+'%';
     find('pd-light').setAttribute('aria-checked',String(state.light));find('pd-fan').setAttribute('aria-checked',String(state.fan));
     find('pd-light-label').textContent=state.light?'LumaGrow · '+state.brightness+'%':'LumaGrow · off';
@@ -114,7 +124,7 @@ export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
   },30000);
   render();
   return {
-    setVisible(value){visible=value;if(!value){stopTour();clearTimeout(pumpTimer);pumpTimer=null;state.watering=false;if(guard())render();}find('pd-stage')?.classList.toggle('pd-paused',!value);},
-    destroy(){destroyed=true;clearInterval(heartbeat);clearInterval(tourTimer);clearTimeout(pumpTimer);root.replaceChildren();}
+    setVisible(value){visible=value;if(!value){film.pause();stopTour();clearTimeout(pumpTimer);pumpTimer=null;state.watering=false;if(guard())render();}find('pd-stage')?.classList.toggle('pd-paused',!value);},
+    destroy(){destroyed=true;film.destroy();clearInterval(heartbeat);clearInterval(tourTimer);clearTimeout(pumpTimer);root.replaceChildren();}
   };
 }
