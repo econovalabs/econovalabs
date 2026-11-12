@@ -1,6 +1,6 @@
 # Econova Labs — Project VERDANT
 
-A responsive, standalone website based on the supplied Project VERDANT final report. No build, installation, server, API keys or login required. The website files live at the root of this new repository.
+A responsive website based on the supplied Project VERDANT final report. Public pages need no login or build step. The owner dashboard requires the configured Supabase administrator account.
 
 ## Public address
 
@@ -19,6 +19,12 @@ Dashboard: https://econovalabs.github.io/econovalabs/admin/
 Sign in directly with the Supabase user ccodesdev@gmail.com and the password you chose privately in Supabase. No ChatGPT sign-in or ChatGPT-hosted backend is used by the current website.
 
 The dashboard includes names, email addresses, comments, average rating, rating distribution, search, rating filters, pagination and CSV export of up to 10,000 matching entries. Visitor names and email addresses are self-reported, not verified. Sign-out clears the private inbox and ends the browser-tab session.
+
+## Admin working demo
+
+After signing in, choose **VERDANT working demo**. Only an account that passes the Supabase administrator check can mount the demo. The simulation module verifies permission again before rendering and rechecks periodically while visible. Signing out removes the model and controls and cancels its timers. The public product page contains a static showcase, not simulation controls.
+
+The phone-friendly demo includes LED colour and brightness, a custom colour picker, light and fan switches, animated watering, reservoir refill and low-water protection, adjustable illustrative sensor values, manual and automatic modes, day/night scenarios, modular layout, enclosure finishes and a guided walkthrough. Controls do not operate real equipment or save product settings. Thresholds and readings are illustrative, not plant-care advice or verified product specifications. Reduced-motion preferences are respected.
 
 Supabase stores feedback and manages sign-in. Its URL and publishable key in config.js are public application settings. Never put a secret/service-role key or password in this repository. Database row-level security pins the administrator by immutable user ID. Anonymous clients can submit through the validated RPC but cannot read responses or insert directly into the table. Other signed-in users cannot read or export feedback.
 

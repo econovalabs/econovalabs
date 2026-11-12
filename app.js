@@ -39,26 +39,4 @@ function closeMenu() { navigation.classList.remove('open'); menuButton.setAttrib
 menuButton.addEventListener('click', () => { const open = navigation.classList.toggle('open'); menuButton.setAttribute('aria-expanded', String(open)); menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation'); });
 navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && navigation.classList.contains('open')) { closeMenu(); menuButton.focus(); } });
-const brightness = document.getElementById('brightness');
-const lightSwitch = document.getElementById('light-switch');
-const airSwitch = document.getElementById('air-switch');
-let mode = 'Automatic';
-function updateDemo() {
-  const lightOn = lightSwitch.getAttribute('aria-checked') === 'true';
-  const airOn = airSwitch.getAttribute('aria-checked') === 'true';
-  document.getElementById('brightness-value').textContent = `${brightness.value}%`;
-  document.querySelector('.demo-plant img').style.filter = `brightness(${lightOn ? .78 + Number(brightness.value) / 250 : .72}) drop-shadow(0 22px 12px #163f2d15)`;
-  document.getElementById('demo-status').textContent = `${mode} mode · Lighting ${lightOn ? brightness.value + '%' : 'off'} · Air circulation ${airOn ? 'on' : 'off'}`;
-}
-brightness.addEventListener('input', updateDemo);
-[lightSwitch, airSwitch].forEach(button => button.addEventListener('click', () => { button.setAttribute('aria-checked', String(button.getAttribute('aria-checked') !== 'true')); updateDemo(); }));
-document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => {
-  mode = button.dataset.mode;
-  document.querySelectorAll('[data-mode]').forEach(item => { const selected = item === button; item.classList.toggle('selected', selected); item.setAttribute('aria-pressed', String(selected)); });
-  updateDemo();
-}));
-document.getElementById('reset-demo').addEventListener('click', () => {
-  brightness.value = '70'; lightSwitch.setAttribute('aria-checked', 'true'); airSwitch.setAttribute('aria-checked', 'true');
-  document.querySelector('[data-mode="Automatic"]').click();
-});
 document.getElementById('year').textContent = new Date().getFullYear();

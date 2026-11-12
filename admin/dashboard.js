@@ -2,8 +2,31 @@
 const db=window.econovaDb;
 const byId=id=>document.getElementById(id);
 let page=1,total=0,sequence=0,authorized=false;
+let authEpoch=0,demoInstance=null,demoLoading=false;
+function selectWorkspace(name){
+  if(!authorized)return;
+  const demo=name==='demo';
+  byId('feedback-workspace').hidden=demo;byId('demo-workspace').hidden=!demo;
+  byId('view-feedback').setAttribute('aria-pressed',String(!demo));byId('view-demo').setAttribute('aria-pressed',String(demo));
+  demoInstance?.setVisible(demo);
+}
+async function openProductDemo(){
+  if(!authorized||demoLoading)return;
+  selectWorkspace('demo');
+  if(demoInstance)return;
+  const epoch=authEpoch;demoLoading=true;
+  const root=byId('demo-root');root.classList.remove('pd-error');root.textContent='Loading the private demo…';
+  try{
+    const module=await import('./product-demo.js');
+    const instance=await module.mountProductDemo(root,{db,isAuthorized:()=>authorized&&epoch===authEpoch,onDenied:()=>{if(epoch===authEpoch)showLogin('Please sign in again with the authorized account.',true);}});
+    if(!authorized||epoch!==authEpoch){instance.destroy();return;}
+    demoInstance=instance;demoInstance.setVisible(!byId('demo-workspace').hidden);
+  }catch(error){if(authorized&&epoch===authEpoch){root.textContent=error.message||'The demo could not be loaded. Please try again.';root.classList.add('pd-error');}}
+  finally{if(epoch===authEpoch)demoLoading=false;}
+}
 function node(tag,text,className){const item=document.createElement(tag);if(text!==undefined)item.textContent=text;if(className)item.className=className;return item;}
 function showLogin(message='Only the authorized dashboard account can access responses.',error=false){
+  authEpoch++;demoInstance?.destroy();demoInstance=null;demoLoading=false;byId('demo-root').replaceChildren();byId('demo-root').classList.remove('pd-error');
   authorized=false;sequence++;byId('dashboard-view').hidden=true;byId('login-view').hidden=false;byId('sign-out').hidden=true;byId('signed-in-email').textContent='';
   byId('items').replaceChildren();byId('total').textContent='—';byId('average').textContent='—';byId('distribution').replaceChildren();
   byId('login-status').textContent=message;byId('login-status').classList.toggle('error',error);
@@ -37,11 +60,15 @@ async function load(){
   finally{if(current===sequence)byId('items').setAttribute('aria-busy','false');}
 }
 async function authorize(){
+  const epoch=++authEpoch;
+  demoInstance?.destroy();demoInstance=null;demoLoading=false;
   const {data:{user},error}=await db.auth.getUser();
+  if(epoch!==authEpoch)return false;
   if(error||!user){showLogin();return false;}
   const permission=await db.rpc('econova_admin_status');
+  if(epoch!==authEpoch)return false;
   if(permission.error||permission.data!==true){await db.auth.signOut({scope:'local'});showLogin(permission.error?.code==='PGRST202'?'The dashboard database setup is not complete yet.':'This account does not have dashboard access.',true);return false;}
-  authorized=true;byId('login-password').value='';byId('login-view').hidden=true;byId('dashboard-view').hidden=false;byId('signed-in-email').textContent=user.email||'';byId('sign-out').hidden=false;page=1;await load();return true;
+  authorized=true;byId('login-password').value='';byId('login-view').hidden=true;byId('dashboard-view').hidden=false;byId('signed-in-email').textContent=user.email||'';byId('sign-out').hidden=false;page=1;selectWorkspace('feedback');await load();return true;
 }
 byId('login-form').addEventListener('submit',async event=>{
   event.preventDefault();if(!byId('login-form').reportValidity()||byId('login-submit').disabled)return;
@@ -62,6 +89,8 @@ byId('sign-out').addEventListener('click',async()=>{
 });
 byId('filters').addEventListener('submit',event=>{event.preventDefault();page=1;load();});
 byId('refresh').addEventListener('click',load);
+byId('view-feedback').addEventListener('click',()=>selectWorkspace('feedback'));
+byId('view-demo').addEventListener('click',openProductDemo);
 byId('clear').addEventListener('click',()=>{byId('filters').reset();page=1;load();});
 byId('previous').addEventListener('click',()=>{if(page>1){page--;load();}});
 byId('next').addEventListener('click',()=>{page++;load();});
