@@ -27,10 +27,21 @@ export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
   const filmRoot=document.createElement('section');filmRoot.className='pd-film';root.append(filmRoot);
   const film=mountPrivateVideo(filmRoot,{db,isAuthorized,onDenied});
   const find=id=>root.querySelector('#'+id);
+  const voiceControls=document.createElement('div');voiceControls.className='pd-action-row';
+  voiceControls.innerHTML='<button class="button" id="pd-voice" type="button">Automatic demo with voice</button><button class="quiet" id="pd-voice-pause" type="button" hidden>Pause explanation</button><button class="quiet" id="pd-voice-stop" type="button" hidden>Stop explanation</button>';
+  find('pd-play').before(voiceControls);
+  const explanation=document.createElement('p');explanation.id='pd-explanation';explanation.textContent='Slow walkthrough: each explanation finishes before the next step. Keep this tab open and your device sound on.';voiceControls.after(explanation);
+  const speech=window.speechSynthesis;
+  let voiceActive=false,voicePaused=false,voiceTimer=null,utterance=null,voiceStep=0,voiceEpoch=0;
   let state=initialState(),destroyed=false,visible=true,pumpTimer=null,tourTimer=null,tourIndex=0;
   const guard=()=>!destroyed&&isAuthorized();
   function say(message){if(guard())find('pd-status').textContent=message;}
-  function stopTour(){clearInterval(tourTimer);tourTimer=null;if(!destroyed)find('pd-play').textContent='Play guided demo ▶';}
+  function stopVoice(){
+    const wasActive=voiceActive;voiceActive=false;voicePaused=false;voiceEpoch++;clearTimeout(voiceTimer);voiceTimer=null;
+    if(utterance){utterance.onend=null;utterance.onerror=null;utterance=null;}if(wasActive&&speech)speech.cancel();
+    if(!destroyed){find('pd-voice').disabled=false;find('pd-voice-pause').hidden=true;find('pd-voice-stop').hidden=true;find('pd-voice-pause').textContent='Pause explanation';}
+  }
+  function stopTour(){stopVoice();clearInterval(tourTimer);tourTimer=null;if(!destroyed)find('pd-play').textContent='Play guided demo ▶';}
   function render(){
     if(!guard())return;
     const stage=find('pd-stage');stage.classList.toggle('pd-night',!state.day);stage.classList.toggle('pd-watering',state.watering);stage.classList.toggle('pd-fanning',state.fan);stage.classList.toggle('pd-compact',state.layout==='compact');
@@ -113,7 +124,44 @@ export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
     ()=>{state.layout='compact';state.finish='#39454a';say('5 / 6 · BioSphere changes the layout; choose an enclosure finish.');},
     ()=>{state.day=false;state.mode='automatic';automatic();say('6 / 6 · EcoSense coordinates the example night-time schedule.');}
   ];
+  const explanations=[
+    ['Welcome to VERDANT by Econova Labs. This model explains a proposed smart growing enclosure. The values are examples, and this demonstration does not control real equipment. We will explore each feature slowly.',()=>{state=initialState();}],
+    ['First, look at the grow lights above the plants. LumaGrow lights the growing space. Watch the light change to warm white. The brightness is now sixty percent. You can also choose colours and brightness using the manual controls.',()=>{state.color='#fff3b0';state.brightness=60;}],
+    ['Now the light changes to violet at full brightness. The coloured beam shows the lighting setting. These colours illustrate the controls. They do not demonstrate a tested plant growth result.',()=>{state.color='#c9a2ff';state.brightness=100;}],
+    ['Next, follow the blue water flowing from the reservoir through the irrigation pipe to the plants. AquaCore runs one watering pulse. When it finishes, the example soil moisture rises and the water level in the tank falls.',()=>{state.mode='manual';state.moisture=25;water();}],
+    ['Now watch the temperature reading and the thermometer on the greenhouse. The example temperature rises to thirty three degrees Celsius. Automatic mode switches on the fan. The moving air lines show circulation, not a measured cooling result.',()=>{state.mode='automatic';state.temperature=33;state.humidity=65;automatic();}],
+    ['The example temperature now returns to twenty four degrees. The indicator changes back to green and the fan stops. In the controls, moving the temperature slider changes the reading and the greenhouse screen immediately.',()=>{state.temperature=24;automatic();}],
+    ['Water protection is also important. Here the soil is dry, but the tank is almost empty. Automatic mode keeps the pump off. In the manual controls, refill the tank to allow another watering pulse.',()=>{scenario('low');}],
+    ['Finally, the model changes to night time. The automatic schedule turns the grow lights off. This completes the walkthrough. You can replay the explanation, or explore the controls yourself. All readings remain illustrative.',()=>{state.reservoir=80;scenario('night');}]
+  ];
+  let voiceWaiting=false;
+  function nextExplanation(){
+    if(!guard()||!visible||!voiceActive||voicePaused)return;
+    if(voiceStep>=explanations.length){stopVoice();say('Automatic explanation complete. Replay it or explore the controls.');return;}
+    const [text,action]=explanations[voiceStep++];action();render();
+    explanation.textContent=text;say('Explanation '+voiceStep+' / '+explanations.length);voiceWaiting=false;
+    const epoch=voiceEpoch,started=Date.now();
+    utterance=new SpeechSynthesisUtterance(text);utterance.lang='en-IN';utterance.rate=.78;utterance.pitch=1;
+    const voices=speech.getVoices();utterance.voice=voices.find(v=>v.lang==='en-IN')||voices.find(v=>v.lang.startsWith('en'))||null;
+    utterance.onend=()=>{if(!guard()||!voiceActive||epoch!==voiceEpoch)return;voiceWaiting=true;utterance=null;if(!voicePaused)voiceTimer=setTimeout(nextExplanation,Math.max(3000,12000-(Date.now()-started)));};
+    utterance.onerror=event=>{if(!voiceActive||epoch!==voiceEpoch||event.error==='canceled'||event.error==='interrupted')return;stopVoice();say('Voice playback could not start. Check your device speech settings and sound, then try again. The explanation remains visible above.');};
+    speech.speak(utterance);
+  }
+  find('pd-voice').addEventListener('click',()=>{
+    if(!guard())return;stopTour();film.pause();
+    if(!speech||!window.SpeechSynthesisUtterance){say('Voice is unavailable in this browser. Open this dashboard in a browser with text-to-speech support.');return;}
+    clearTimeout(pumpTimer);pumpTimer=null;state.watering=false;voiceActive=true;voiceStep=0;voiceWaiting=false;
+    find('pd-voice').disabled=true;find('pd-voice-pause').hidden=false;find('pd-voice-stop').hidden=false;speech.resume();nextExplanation();
+  });
+  find('pd-voice-pause').addEventListener('click',()=>{
+    if(!guard()||!voiceActive)return;voicePaused=!voicePaused;
+    if(voicePaused){clearTimeout(voiceTimer);speech.pause();say('Explanation paused. Choose Resume explanation to continue.');}
+    else{speech.resume();if(voiceWaiting)voiceTimer=setTimeout(nextExplanation,3000);say('Explanation '+voiceStep+' / '+explanations.length);}
+    find('pd-voice-pause').textContent=voicePaused?'Resume explanation':'Pause explanation';
+  });
+  find('pd-voice-stop').addEventListener('click',()=>{if(!guard())return;stopVoice();clearTimeout(pumpTimer);pumpTimer=null;state.watering=false;render();say('Automatic explanation stopped.');});
   find('pd-play').addEventListener('click',()=>{
+    stopVoice();
     if(!guard())return;if(tourTimer){stopTour();say('Guided demo paused.');return;}
     clearTimeout(pumpTimer);state.watering=false;tourIndex=0;steps[tourIndex++]();render();find('pd-play').textContent='Pause guided demo Ⅱ';
     tourTimer=setInterval(()=>{if(!guard()||!visible){stopTour();return;}if(tourIndex>=steps.length){stopTour();say('Guided demo complete. Explore the controls or reset to start again.');return;}steps[tourIndex++]();render();},4200);
@@ -125,6 +173,6 @@ export async function mountProductDemo(root,{db,isAuthorized,onDenied}){
   render();
   return {
     setVisible(value){visible=value;if(!value){film.pause();stopTour();clearTimeout(pumpTimer);pumpTimer=null;state.watering=false;if(guard())render();}find('pd-stage')?.classList.toggle('pd-paused',!value);},
-    destroy(){destroyed=true;film.destroy();clearInterval(heartbeat);clearInterval(tourTimer);clearTimeout(pumpTimer);root.replaceChildren();}
+    destroy(){stopVoice();destroyed=true;film.destroy();clearInterval(heartbeat);clearInterval(tourTimer);clearTimeout(pumpTimer);root.replaceChildren();}
   };
 }

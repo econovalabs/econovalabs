@@ -28,6 +28,8 @@ The phone-friendly demo includes LED colour and brightness, a custom colour pick
 
 The temperature slider immediately updates the numeric reading, greenhouse screen and warm/cool thermometer. Irrigation includes flowing pipe highlights, falling water and ripples; ventilation includes moving air streaks.
 
+Choose **Automatic demo with voice** for eight slow, captioned explanations. Browser text-to-speech uses an English voice at a reduced rate and waits for each explanation to finish before advancing, with a reading pause between steps. Pause/resume and stop are available. Manual interaction, leaving the workspace and signing out cancel narration. Voice availability and sound depend on the browser and device speech settings; narration is separate from the silent MP4.
+
 The admin demo also supports a captioned, 30-second MP4 walkthrough. Run supabase/admin-video.sql once, then open the supplied MP4 using **Open MP4 from this device** and choose **Save video privately**. It is stored in the private econova-admin-media bucket as verdant-walkthrough.mp4, outside this public repository. **Watch private video** creates a short-lived playback URL after checking administrator permission. The film is a silent concept animation, not footage of physical hardware.
 
 Supabase stores feedback and manages sign-in. Its URL and publishable key in config.js are public application settings. Never put a secret/service-role key or password in this repository. Database row-level security pins the administrator by immutable user ID. Anonymous clients can submit through the validated RPC but cannot read responses or insert directly into the table. Other signed-in users cannot read or export feedback.
