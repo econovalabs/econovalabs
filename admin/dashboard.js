@@ -5,9 +5,10 @@ let page=1,total=0,sequence=0,authorized=false;
 let authEpoch=0,demoInstance=null,demoLoading=false;
 function selectWorkspace(name){
   if(!authorized)return;
-  const demo=name==='demo';
-  byId('feedback-workspace').hidden=demo;byId('demo-workspace').hidden=!demo;
-  byId('view-feedback').setAttribute('aria-pressed',String(!demo));byId('view-demo').setAttribute('aria-pressed',String(demo));
+  const demo=name==='demo', tef=name==='tef';
+  byId('feedback-workspace').hidden=demo||tef;byId('demo-workspace').hidden=!demo;byId('tef-workspace').hidden=!tef;
+  byId('view-feedback').setAttribute('aria-pressed',String(!demo&&!tef));byId('view-demo').setAttribute('aria-pressed',String(demo));byId('view-tef').setAttribute('aria-pressed',String(tef));
+  if(!tef){byId('tef-frame').removeAttribute('srcdoc');byId('tef-frame').hidden=true;}
   demoInstance?.setVisible(demo);
 }
 async function openProductDemo(){
@@ -27,6 +28,7 @@ async function openProductDemo(){
 function node(tag,text,className){const item=document.createElement(tag);if(text!==undefined)item.textContent=text;if(className)item.className=className;return item;}
 function showLogin(message='Only the authorized dashboard account can access responses.',error=false){
   authEpoch++;demoInstance?.destroy();demoInstance=null;demoLoading=false;byId('demo-root').replaceChildren();byId('demo-root').classList.remove('pd-error');
+  byId('tef-frame').removeAttribute('srcdoc');byId('tef-frame').hidden=true;byId('tef-workspace').hidden=true;
   authorized=false;sequence++;byId('dashboard-view').hidden=true;byId('login-view').hidden=false;byId('sign-out').hidden=true;byId('signed-in-email').textContent='';
   byId('items').replaceChildren();byId('total').textContent='—';byId('average').textContent='—';byId('distribution').replaceChildren();
   byId('login-status').textContent=message;byId('login-status').classList.toggle('error',error);
@@ -91,6 +93,21 @@ byId('filters').addEventListener('submit',event=>{event.preventDefault();page=1;
 byId('refresh').addEventListener('click',load);
 byId('view-feedback').addEventListener('click',()=>selectWorkspace('feedback'));
 byId('view-demo').addEventListener('click',openProductDemo);
+byId('view-tef').addEventListener('click',async()=>{
+  if(!authorized)return;
+  selectWorkspace('tef');const epoch=authEpoch;const status=byId('tef-status');status.textContent='Opening TEF Suite demo...';
+  try{
+    const permission=await db.rpc('econova_admin_status');
+    if(!authorized||epoch!==authEpoch||byId('tef-workspace').hidden)return;
+    if(permission.error||permission.data!==true)throw Error('Administrator access could not be verified.');
+    const {data,error}=await db.storage.from('tef-private-demo').download('index.html');
+    if(!authorized||epoch!==authEpoch||byId('tef-workspace').hidden)return;
+    if(error||!data)throw Error('The private demo is not available yet.');
+    const html=await data.text();
+    if(!authorized||epoch!==authEpoch||byId('tef-workspace').hidden)return;
+    byId('tef-frame').srcdoc=html;byId('tef-frame').hidden=false;status.textContent='';
+  }catch(error){if(authorized&&epoch===authEpoch)status.textContent=error.message||'Unable to open the demo.';}
+});
 byId('clear').addEventListener('click',()=>{byId('filters').reset();page=1;load();});
 byId('previous').addEventListener('click',()=>{if(page>1){page--;load();}});
 byId('next').addEventListener('click',()=>{page++;load();});
